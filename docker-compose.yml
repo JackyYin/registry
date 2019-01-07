@@ -1,0 +1,32 @@
+version: '3.5'
+
+services:
+  registry:
+    image: registry:2
+    container_name: registry
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - "./config.yml:/etc/docker/registry/config.yml"
+      - "registry:/var/lib/registry"
+    networks:
+      - registry
+
+  registry-ui:
+    image: joxit/docker-registry-ui:static
+    container_name: registry-ui
+    restart: always
+    ports:
+      - "5001:80"
+    environment:
+      - "REGISTRY_URL=http://registry:5000"
+    networks:
+      - registry
+
+
+volumes:
+  registry:
+
+networks:
+  registry:
